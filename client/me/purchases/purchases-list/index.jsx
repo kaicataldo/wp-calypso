@@ -30,14 +30,26 @@ import {
 	isFetchingUserPurchases,
 } from 'state/purchases/selectors';
 import { recordTracksEvent } from 'state/analytics/actions';
+import getConciergeNextAppointment from 'state/selectors/get-concierge-next-appointment';
 
 class PurchasesList extends Component {
+	constructor() {
+		super();
+		this.state = {
+			bannerType: '',
+		};
+	}
+
 	isDataLoading() {
 		if ( this.props.isFetchingUserPurchases && ! this.props.hasLoadedUserPurchasesFromServer ) {
 			return true;
 		}
 
 		return ! this.props.sites.length;
+	}
+
+	renderConciergeBanner() {
+		// 'schedule' ===
 	}
 
 	render() {
@@ -87,6 +99,7 @@ class PurchasesList extends Component {
 		return (
 			<Main className="purchases-list">
 				<QueryUserPurchases userId={ this.props.userId } />
+				{ /* { site.id && <QueryConciergeInitial siteId={ site.id } /> } */ }
 				<PageViewTracker path="/me/purchases" title="Purchases" />
 				<MeSidebarNavigation />
 				<PurchasesHeader section="purchases" />
@@ -113,6 +126,7 @@ export default connect(
 			isFetchingUserPurchases: isFetchingUserPurchases( state ),
 			purchases: getUserPurchases( state, userId ),
 			sites: getSites( state ),
+			nextAppointment: getConciergeNextAppointment( state ),
 			userId,
 		};
 	},

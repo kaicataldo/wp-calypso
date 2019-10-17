@@ -15,8 +15,6 @@ export {
 	closeSiteRedirectNotice,
 	declineTransfer,
 	deleteDns,
-	disablePrivacyProtection,
-	enablePrivacyProtection,
 	fetchDns,
 	fetchNameservers,
 	fetchSiteRedirect,

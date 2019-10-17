@@ -120,7 +120,7 @@ const NULLISH_KEY = {};
  * Note: Inserts WeakMaps except for the last map which will be a regular Map.
  * The last map is a regular one because the the key for the last map is the string results of args.join().
  */
-function insertDependentKey( map, key, currentIndex, arr ) {
+function insertDependentKey( map: any, key: any, currentIndex: number, arr: any[] ) {
 	if ( key != null && Object( key ) !== key ) {
 		throw new TypeError( 'key must be an object, `null`, or `undefined`' );
 	}

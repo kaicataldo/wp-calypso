@@ -96,6 +96,17 @@ function getEligibleGSuiteDomain( selectedDomainName, domains ) {
 }
 
 /**
+ * Retrieves the first domain name that is eligible to G Suite
+ *
+ * @param {Array} domains - list of domain objects
+ * @returns {String} - Eligible domain name
+ */
+function getFirstEligibleGSuiteDomainName( domains ) {
+	const supportedDomains = getGSuiteSupportedDomains( domains );
+	return supportedDomains.length ? supportedDomains[ 0 ].name : null;
+}
+
+/**
  * Filters a list of domains by the domains that eligible for G Suite
  *
  * @param {Array} domains - list of domain objects
@@ -213,6 +224,7 @@ export {
 	formatPrice,
 	getAnnualPrice,
 	getEligibleGSuiteDomain,
+	getFirstEligibleGSuiteDomainName,
 	getGSuiteSettingsUrl,
 	getGSuiteSupportedDomains,
 	getLoginUrlWithTOSRedirect,

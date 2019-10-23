@@ -17,7 +17,6 @@ import Header from 'my-sites/domains/domain-management/components/header';
 import SidebarNavigation from 'my-sites/sidebar-navigation';
 import {
 	getEligibleGSuiteDomain,
-	getFirstEligibleGSuiteDomainName,
 	hasGSuiteSupportedDomain,
 	hasGSuiteWithAnotherProvider,
 	hasGSuiteWithUs,
@@ -171,9 +170,7 @@ class EmailManagement extends React.Component {
 	addGSuiteCta() {
 		const { domains, selectedDomainName } = this.props;
 		const emailForwardingDomain = getEligibleEmailForwardingDomain( selectedDomainName, domains );
-		const eligibleGSuiteDomainName = getEligibleGSuiteDomain( selectedDomainName, domains );
-		const gsuiteDomainName =
-			eligibleGSuiteDomainName || getFirstEligibleGSuiteDomainName( domains );
+		const gsuiteDomainName = getEligibleGSuiteDomain( selectedDomainName, domains );
 
 		return (
 			<Fragment>

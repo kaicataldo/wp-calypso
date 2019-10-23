@@ -87,23 +87,13 @@ function getEligibleGSuiteDomain( selectedDomainName, domains ) {
 	if ( selectedDomainName && canDomainAddGSuite( selectedDomainName ) ) {
 		return selectedDomainName;
 	}
-
 	const supportedDomains = getGSuiteSupportedDomains( domains );
-
 	const primaryDomain = find( supportedDomains, 'isPrimary' );
-
-	return get( primaryDomain, 'name', '' );
-}
-
-/**
- * Retrieves the first domain name that is eligible to G Suite
- *
- * @param {Array} domains - list of domain objects
- * @returns {String} - Eligible domain name
- */
-function getFirstEligibleGSuiteDomainName( domains ) {
-	const supportedDomains = getGSuiteSupportedDomains( domains );
-	return supportedDomains.length ? supportedDomains[ 0 ].name : null;
+	const primaryDomainName = get( primaryDomain, 'name', '' );
+	if ( ! primaryDomainName && supportedDomains.length ) {
+		return get( supportedDomains[ 0 ], 'name', '' );
+	}
+	return primaryDomainName;
 }
 
 /**
@@ -224,7 +214,6 @@ export {
 	formatPrice,
 	getAnnualPrice,
 	getEligibleGSuiteDomain,
-	getFirstEligibleGSuiteDomainName,
 	getGSuiteSettingsUrl,
 	getGSuiteSupportedDomains,
 	getLoginUrlWithTOSRedirect,

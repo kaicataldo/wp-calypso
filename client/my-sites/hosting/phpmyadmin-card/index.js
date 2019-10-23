@@ -44,7 +44,7 @@ export const requestPmaLink = siteId =>
 const PhpMyAdminCard = ( { translate, siteId, token, loading } ) => {
 	useEffect( () => {
 		if ( token && ! loading ) {
-			window.open( `https://{your-sandbox-domain}.wordpress.com/pma-login?token=${ token }` );
+			window.open( `https://wordpress.com/pma-login?token=${ token }` );
 		}
 	}, [ token, loading ] );
 
@@ -75,7 +75,7 @@ export default connect( state => {
 
 	return {
 		token: get( pmaTokenRequest.data, 'token', null ),
-		loading: pmaTokenRequest.status === 'pending',
+		loading: pmaTokenRequest.state === 'pending',
 		siteId,
 	};
 } )( localize( PhpMyAdminCard ) );

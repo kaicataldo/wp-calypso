@@ -1,20 +1,20 @@
 /**
  * External dependencies
  */
-import { format as formatUrl, parse as parseUrl } from 'url';
-import { has, isString, omit, startsWith } from 'lodash';
+import { parse as parseUrl } from 'url';
+import { has, isString, startsWith } from 'lodash';
 
 /**
  * Internal dependencies
  */
 import { URL, Scheme } from 'types';
-import { Falsey } from 'utility-types';
 
 /**
  * Re-exports
  */
 export { addQueryArgs } from 'lib/route';
 export { withoutHttp, urlToSlug, urlToDomainAndPath } from './http-utils';
+export { default as omitUrlParams } from './omit-url-params';
 export { default as isExternal } from './is-external';
 
 /**
@@ -94,27 +94,6 @@ export function resemblesUrl( query: string ): boolean {
 	}
 
 	return true;
-}
-
-/**
- * Removes given params from a url.
- *
- * @param  {String} url URL to be cleaned
- * @param  {Array|String}  paramsToOmit The collection of params or single param to reject
- * @return {String} Url less the omitted params.
- */
-export function omitUrlParams( url: Falsey, paramsToOmit: string | string[] ): null;
-export function omitUrlParams( url: URL, paramsToOmit: string | string[] ): URL;
-export function omitUrlParams( url: URL | Falsey, paramsToOmit: string | string[] ): URL | null {
-	if ( ! url ) {
-		return null;
-	}
-
-	const parsed = parseUrl( url, true );
-	parsed.query = omit( parsed.query, paramsToOmit );
-
-	delete parsed.search;
-	return formatUrl( parsed );
 }
 
 /**

@@ -8075,11 +8075,11 @@
 			"integrity": "sha512-J6EfUNwcMQ+aM5YPOB8ZbgAZu6wc82f/0WFxrxwV6Ll8wBwLaHLKCqQ5Imub02JriCVVdPjgI+6P3a4EWJCxAg=="
 		},
 		"d3-scale": {
-			"version": "3.0.0",
-			"resolved": "https://registry.npmjs.org/d3-scale/-/d3-scale-3.0.0.tgz",
-			"integrity": "sha512-ktic5HBFlAZj2CN8CCl/p/JyY8bMQluN7+fA6ICE6yyoMOnSQAZ1Bb8/5LcNpNKMBMJge+5Vv4pWJhARYlQYFw==",
+			"version": "3.2.0",
+			"resolved": "https://registry.npmjs.org/d3-scale/-/d3-scale-3.2.0.tgz",
+			"integrity": "sha512-1RnLYPmH3f2E96hSsCr3ok066myuAxoH3+pnlJAedeMOp7jeW7A+GZHAyVWWaStfphyPEBiDoLFA9zl+DcnC2Q==",
 			"requires": {
-				"d3-array": "^1.2.0 || 2",
+				"d3-array": "1.2.0 - 2",
 				"d3-format": "1",
 				"d3-interpolate": "1",
 				"d3-time": "1",

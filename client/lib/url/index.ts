@@ -18,6 +18,7 @@ export { withoutHttp, urlToSlug, urlToDomainAndPath } from './http-utils';
 export { default as isExternal } from './is-external';
 export { default as resemblesUrl } from './resembles-url';
 export { URL_TYPE, determineUrlType } from './url-type';
+export { default as format } from './format';
 
 /**
  * Check if a URL is located outside of Calypso.

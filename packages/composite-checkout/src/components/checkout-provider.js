@@ -24,11 +24,9 @@ export const CheckoutProvider = ( {
 } ) => {
 	const paymentMethods = getPaymentMethods();
 	const [ paymentMethodId, setPaymentMethodId ] = useState( paymentMethods[ 0 ].id );
-	const [ paymentMethodData, setPaymentMethodData ] = useState( {} );
 	const paymentMethod = getPaymentMethods().find( ( { id } ) => id === paymentMethodId );
 	if (
 		! paymentData ||
-		! dispatchPaymentAction ||
 		! total ||
 		! items ||
 		! localize ||
@@ -46,8 +44,6 @@ export const CheckoutProvider = ( {
 		paymentMethodId,
 		total,
 		items,
-		paymentMethodData,
-		setPaymentMethodData,
 		setPaymentMethodId,
 		onSuccess,
 		onFailure,
@@ -81,8 +77,8 @@ export const useCheckoutRedirects = () => {
 };
 
 CheckoutProvider.propTypes = {
-	dispatchPaymentAction: PropTypes.func.isRequired, // TODO: make this not required
-	paymentData: PropTypes.object.isRequired, // TODO: make this not required
+	dispatchPaymentAction: PropTypes.func.isRequired,
+	paymentData: PropTypes.object.isRequired,
 	total: PropTypes.object.isRequired,
 	items: PropTypes.arrayOf( PropTypes.object ).isRequired,
 	localize: PropTypes.func.isRequired,

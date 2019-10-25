@@ -92,8 +92,8 @@ Checkout.propTypes = {
 	items: PropTypes.array.isRequired,
 	total: PropTypes.object.isRequired,
 	availablePaymentMethods: PropTypes.arrayOf( PropTypes.string ),
-	paymentData: PropTypes.object.isRequired, // TODO: make this not required
-	dispatchPaymentAction: PropTypes.func.isRequired, // TODO: make this not required
+	paymentData: PropTypes.object.isRequired,
+	dispatchPaymentAction: PropTypes.func.isRequired,
 	onSuccess: PropTypes.func.isRequired,
 	onFailure: PropTypes.func.isRequired,
 	successRedirectUrl: PropTypes.string.isRequired,

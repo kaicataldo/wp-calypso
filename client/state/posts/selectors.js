@@ -1,11 +1,8 @@
-/** @format */
-
 /**
  * External dependencies
  */
 import { filter, find, has, get, includes, isEqual, omit, some } from 'lodash';
 import createSelector from 'lib/create-selector';
-import { moment } from 'i18n-calypso';
 
 /**
  * Internal dependencies
@@ -478,7 +475,7 @@ export const isPostPublished = createSelector(
 
 		return (
 			includes( [ 'publish', 'private' ], post.status ) ||
-			( post.status === 'future' && moment( post.date ).isBefore( moment() ) )
+			( post.status === 'future' && new Date( post.date ) < new Date() )
 		);
 	},
 	state => state.posts.queries

@@ -1,7 +1,7 @@
 /**
  * External dependencies
  */
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import styled, { ThemeProvider } from 'styled-components';
 
@@ -37,6 +37,18 @@ export default function Checkout( {
 } ) {
 	const localize = localizeFactory( locale );
 	const [ stepNumber, setStepNumber ] = useState( 1 );
+	const changeStep = useCallback(
+		nextStep => {
+			setStepNumber( prevStep => {
+				dispatchPaymentAction( {
+					type: 'STEP_CHANGED',
+					payload: { prevStep, nextStep },
+				} );
+				return nextStep;
+			} );
+		},
+		[ dispatchPaymentAction ]
+	);
 
 	return (
 		<ThemeProvider theme={ theme }>
@@ -62,17 +74,17 @@ export default function Checkout( {
 						</div>
 						<PaymentMethodsStep
 							availablePaymentMethods={ availablePaymentMethods }
-							setStepNumber={ setStepNumber }
+							setStepNumber={ changeStep }
 							isActive={ stepNumber === 1 }
 							isComplete={ stepNumber > 1 }
 						/>
 						<BillingDetailsStep
-							setStepNumber={ setStepNumber }
+							setStepNumber={ changeStep }
 							isActive={ stepNumber === 2 }
 							isComplete={ stepNumber > 2 }
 						/>
 						<ReviewOrderStep
-							setStepNumber={ setStepNumber }
+							setStepNumber={ changeStep }
 							isActive={ stepNumber === 3 }
 							isComplete={ stepNumber > 3 }
 							ReviewContent={ ReviewContent }

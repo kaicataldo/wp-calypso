@@ -38,9 +38,6 @@ import QueryConciergeInitial from 'components/data/query-concierge-initial';
 class PurchasesList extends Component {
 	constructor() {
 		super();
-		this.state = {
-			bannerType: '',
-		};
 	}
 
 	isDataLoading() {
@@ -68,7 +65,12 @@ class PurchasesList extends Component {
 			bannerType = 'canPurchaseConcierge';
 		}
 
-		return <ConciergeBanner bannerType={ bannerType } recordTracksEvent={ this.props.recordTracksEvent } />;
+		return (
+			<ConciergeBanner
+				bannerType={ bannerType }
+				recordTracksEvent={ this.props.recordTracksEvent }
+			/>
+		);
 	}
 
 	render() {

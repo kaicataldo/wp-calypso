@@ -11,22 +11,27 @@ import { localize } from 'i18n-calypso';
  */
 import ActionCard from 'components/action-card';
 import TrackComponentView from 'lib/analytics/track-component-view';
+import conciergeImage from 'assets/images/illustrations/jetpack-concierge.svg';
 
 class ConciergeBanner extends Component {
 	getText() {
 		const { bannerType } = this.props;
 
-		let headerText, mainText, buttonText, buttonHref;
+		let headerText, mainText, buttonText, buttonHref, illustrationUrl;
 
 		switch ( bannerType ) {
 			case 'upcomingAppointment':
-				headerText = this.props.translate( 'You have an upcoming appointment' );
-				mainText = this.props.translate( 'You have an upcoming Quick Start session appointment.', {
-					comment:
-						"Please extend the translation so that it's clear that these sessions are only available in English.",
-				} );
-				buttonText = this.props.translate( 'View session dashboard' );
+				headerText = this.props.translate( 'Your appointment is coming up!' );
+				mainText = this.props.translate(
+					'Get ready with your questions for your upcoming Quick Start session appointment.',
+					{
+						comment:
+							"Please extend the translation so that it's clear that these sessions are only available in English.",
+					}
+				);
+				buttonText = this.props.translate( 'Session dashboard' );
 				buttonHref = '/me/concierge';
+				illustrationUrl = conciergeImage;
 				break;
 
 			case 'availableIncludedSession':
@@ -40,6 +45,7 @@ class ConciergeBanner extends Component {
 				);
 				buttonText = this.props.translate( 'Schedule Now' );
 				buttonHref = '/me/concierge';
+				illustrationUrl = conciergeImage;
 				break;
 
 			case 'availablePurchasedSession':
@@ -53,6 +59,7 @@ class ConciergeBanner extends Component {
 				);
 				buttonText = this.props.translate( 'Schedule Now' );
 				buttonHref = '/me/concierge';
+				illustrationUrl = conciergeImage;
 				break;
 
 			case 'canPurchaseConcierge':
@@ -66,14 +73,15 @@ class ConciergeBanner extends Component {
 				);
 				buttonText = this.props.translate( 'Purchase Now' );
 				buttonHref = '/checkout/offer-quickstart-session';
+				illustrationUrl = '/calypso/images/illustrations/illustration-start.svg';
 				break;
 		}
 
-		return { headerText, mainText, buttonText, buttonHref };
+		return { headerText, mainText, buttonText, buttonHref, illustrationUrl };
 	}
 
 	render() {
-		const { headerText, mainText, buttonText, buttonHref } = this.getText();
+		const { headerText, mainText, buttonText, buttonHref, illustrationUrl } = this.getText();
 
 		return (
 			<>
@@ -92,7 +100,7 @@ class ConciergeBanner extends Component {
 						} );
 					} }
 					compact={ false }
-					illustration="/calypso/images/illustrations/illustration-start.svg"
+					illustration={ illustrationUrl }
 				/>
 			</>
 		);

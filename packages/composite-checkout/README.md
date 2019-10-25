@@ -438,7 +438,8 @@ The main component in this package. It has the following props.
 - locale: string (required)
 - items: array (required)
 - total: object (required)
-- onChangeBillingContact: function
+- dispatchPaymentAction: function (required)
+- paymentData: object (required)
 - availablePaymentMethods: array
 - onSuccess: function (required)
 - onFailure: function (required)
@@ -457,6 +458,30 @@ If any event in a customization slot causes the line items to change (for exampl
 The line items are for display purposes only. They should also include subtotals, discounts, and taxes. No math will be performed on the line items. Instead, the amount to be charged will be specified by the required prop `total`, which is another line item.
 
 The `displayValue` property of both the items and the total can use limited Markdown formatting, including the `~~` characters for strike-through text. If customizing this component, the property should be passed through the `renderDisplayValueMarkdown()` helper.
+
+The value of `paymentData` and `dispatchPaymentAction` should be the values returned by the hook `usePaymentState()`. That hook accepts a single argument which is a callback that can be used to act on various events that occur within the package. The handler function will receive three arguments: `action, dispatch, next`. `action` contains two properties: `type` and `payload`. `dispatch` is the dispatcher function in case your handler wants to dispatch additional actions. `next` is a callback that will call the internal handler, which you should do for any action you don't handle yourself. The following example handler will deal with fetching the stripe configuration and will log whenever the step changes.
+
+```js
+function handleCheckoutEvent( { type, payload }, dispatch, next ) {
+	if ( type === 'STRIPE_CONFIGURATION_FETCH' ) {
+		fetch( '/stripe-configuration' )
+			.then( res => res.json() )
+			.then( stripeConfiguration => {
+				dispatch( {
+					type: 'STRIPE_CONFIGURATION_SET',
+					payload: {
+						stripeConfiguration,
+					},
+				} );
+			} );
+		return;
+	}
+	if ( type === 'STEP_CHANGED' ) {
+		console.log( 'step changed from', payload.prevStep, 'to', payload.nextStep );
+	}
+	next();
+}
+```
 
 ### CheckoutNextStepButton
 

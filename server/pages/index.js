@@ -815,6 +815,17 @@ module.exports = function() {
 	handleSectionPath( LOGIN_SECTION_DEFINITION, '/log-in', true );
 	loginRouter( serverRouter( app, loginRouteSetup, null ) );
 
+	// Set up Gutenbearding routing.
+	handleSectionPath(
+		{
+			name: 'gutenbearding',
+			module: 'gutenbearding',
+			enableLoggedOut: true,
+		},
+		'/gutenbearding',
+		'entry-gutenbearding'
+	);
+
 	// This is used to log to tracks Content Security Policy violation reports sent by browsers
 	app.post(
 		'/cspreport',

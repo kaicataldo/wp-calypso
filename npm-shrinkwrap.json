@@ -23345,9 +23345,9 @@
 			"integrity": "sha1-9PrTM0R7wLB9TcjpIJ2POaisd+g="
 		},
 		"tinymce": {
-			"version": "4.8.5",
-			"resolved": "https://registry.npmjs.org/tinymce/-/tinymce-4.8.5.tgz",
-			"integrity": "sha512-1V6+PxP5Kp8H/Kuf+EOe6vyrtj1Dlj98q33DgiKGoGPTmbcQaVZWiT+lhqj8ICXKVLV3YxAieOJyJXai4SLHQg=="
+			"version": "5.1.1",
+			"resolved": "https://registry.npmjs.org/tinymce/-/tinymce-5.1.1.tgz",
+			"integrity": "sha512-gdIt9kMNkQrDA0vm9mLcqnDBMMwDV6xsIaug0UzbRUnLpcOjR8JnE0P12GwrA/+9/p8IZiHcolGN9xAD/XxDzw=="
 		},
 		"title-case": {
 			"version": "2.1.1",

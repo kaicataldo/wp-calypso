@@ -1,8 +1,8 @@
 /**
  * External dependencies
  */
-import React from 'react';
-import styled from 'styled-components';
+import React, { useState, useContext } from 'react';
+import styled, { ThemeContext } from 'styled-components';
 import { CardCvcElement, CardExpiryElement, CardNumberElement } from 'react-stripe-elements';
 
 /**
@@ -13,11 +13,46 @@ import GridRow from './grid-row';
 import { useLocalize } from '../lib/localize';
 import { useStripe } from '../lib/stripe';
 import { useCheckoutHandlers } from '../index';
+import { VisaLogo, AmexLogo, MastercardLogo } from './payment-logos';
 
 export default function StripeCreditCardFields( { isActive, summary } ) {
 	const localize = useLocalize();
+	const theme = useContext( ThemeContext );
 	const { onFailure } = useCheckoutHandlers();
 	const { stripeLoadingError, isStripeLoading } = useStripe();
+	const [ cardNumberElementData, setCardNumberElementData ] = useState( null );
+	const [ cardExpiryElementData, setCardExpiryElementData ] = useState( null );
+	const [ cardCvcElementData, setCardCvcElementData ] = useState( null );
+	const [ cardBrand, setCardBrand ] = useState( 'unknown' );
+
+	const handleStripeFieldChange = ( input, setCardElementData ) => {
+		if ( input.elementType === 'cardNumber' ) {
+			setCardBrand( input.brand );
+		}
+
+		if ( input.error && input.error.message ) {
+			setCardElementData( input.error.message );
+			return;
+		}
+
+		setCardElementData( null );
+	};
+
+	const cardNumberStyle = {
+		base: {
+			fontSize: '16px',
+			color: theme.colors.textColor,
+			fontFamily: theme.fonts.body,
+			fontWeight: theme.weights.normal,
+			'::placeholder': {
+				color: theme.colors.textColorLight,
+			},
+		},
+		invalid: {
+			color: theme.colors.textColor,
+		},
+	};
+
 	if ( ! isActive || summary ) {
 		return null;
 	}
@@ -31,11 +66,52 @@ export default function StripeCreditCardFields( { isActive, summary } ) {
 
 	return (
 		<CreditCardFieldsWrapper>
-			<CardNumberElement />
+			<Label>
+				<LabelText>{ localize( 'Card number' ) }</LabelText>
+				<StripeFieldWrapper hasError={ cardNumberElementData }>
+					<CardNumberElement
+						style={ cardNumberStyle }
+						onChange={ input => {
+							handleStripeFieldChange( input, setCardNumberElementData );
+						} }
+					/>
+					<CardFieldIcon brand={ cardBrand } />
+
+					{ cardNumberElementData && (
+						<StripeErrorMessage>{ cardNumberElementData }</StripeErrorMessage>
+					) }
+				</StripeFieldWrapper>
+			</Label>
 			<FieldRow gap="4%" columnWidths="48% 48%">
-				<CardExpiryElement />
+				<Label>
+					<LabelText>{ localize( 'Expiry date' ) }</LabelText>
+					<StripeFieldWrapper hasError={ cardExpiryElementData }>
+						<CardExpiryElement
+							style={ cardNumberStyle }
+							onChange={ input => {
+								handleStripeFieldChange( input, setCardExpiryElementData );
+							} }
+						/>
+					</StripeFieldWrapper>
+					{ cardExpiryElementData && (
+						<StripeErrorMessage>{ cardExpiryElementData }</StripeErrorMessage>
+					) }
+				</Label>
 				<GridRow gap="4%" columnWidths="67% 29%">
-					<CardCvcElement />
+					<Label>
+						<LabelText>{ localize( 'Security code' ) }</LabelText>
+						<StripeFieldWrapper hasError={ cardCvcElementData }>
+							<CardCvcElement
+								style={ cardNumberStyle }
+								onChange={ input => {
+									handleStripeFieldChange( input, setCardCvcElementData );
+								} }
+							/>
+						</StripeFieldWrapper>
+						{ cardCvcElementData && (
+							<StripeErrorMessage>{ cardCvcElementData }</StripeErrorMessage>
+						) }
+					</Label>
 					<CVVImage />
 				</GridRow>
 			</FieldRow>
@@ -49,6 +125,135 @@ export default function StripeCreditCardFields( { isActive, summary } ) {
 		</CreditCardFieldsWrapper>
 	);
 }
+
+const CreditCardFieldsWrapper = styled.div`
+	padding: 16px;
+	position: relative;
+
+	:after {
+		display: block;
+		width: calc( 100% - 6px );
+		height: 1px;
+		content: '';
+		background: ${props => props.theme.colors.borderColorLight};
+		position: absolute;
+		top: 0;
+		left: 3px;
+	}
+`;
+
+const CreditCardField = styled( Field )`
+	margin-top: 16px;
+
+	:first-child {
+		margin-top: 0;
+	}
+`;
+
+const FieldRow = styled( GridRow )`
+	margin-top: 16px;
+`;
+
+const CVVImage = styled( CVV )`
+	margin-top: 21px;
+	display: block;
+	width: 100%;
+`;
+
+const Label = styled.label`
+	display: block;
+
+	:hover {
+		cursor: pointer;
+	}
+`;
+
+const LabelText = styled.span`
+	display: block;
+	font-size: 14px;
+	font-weight: ${props => props.theme.weights.bold};
+	margin-bottom: 8px;
+	color: ${props => props.theme.colors.textColor};
+`;
+
+const StripeFieldWrapper = styled.span`
+	position: relative;
+	display: block;
+
+	.StripeElement {
+		display: block;
+		width: 100%;
+		box-sizing: border-box;
+		border: 1px solid
+			${props => ( props.hasError ? props.theme.colors.error : props.theme.colors.borderColor )};
+		padding: 12px 10px;
+	}
+
+	.StripeElement--focus {
+		outline: ${props => props.theme.colors.outline} auto 5px;
+	}
+
+	.StripeElement--focus.StripeElement--invalid {
+		outline: ${props => props.theme.colors.error} auto 5px;
+	}
+`;
+
+const StripeErrorMessage = styled.span`
+	font-size: 14px;
+	margin-top: 8px;
+	font-style: italic;
+	color: ${props => props.theme.colors.error};
+	display: block;
+	font-weight: ${props => props.theme.weights.normal};
+`;
+
+const LockIconGraphic = styled( LockIcon )`
+	display: block;
+	position: absolute;
+	right: 10px;
+	top: 14px
+	width: 20px;
+	height: 20px;
+`;
+
+function CardFieldIcon( { brand } ) {
+	let cardFieldIcon = null;
+
+	switch ( brand ) {
+		case 'visa':
+			cardFieldIcon = (
+				<BrandLogo>
+					<VisaLogo />
+				</BrandLogo>
+			);
+			break;
+		case 'mastercard':
+			cardFieldIcon = (
+				<BrandLogo>
+					<MastercardLogo />
+				</BrandLogo>
+			);
+			break;
+		case 'amex':
+			cardFieldIcon = (
+				<BrandLogo>
+					<AmexLogo />
+				</BrandLogo>
+			);
+			break;
+		default:
+			cardFieldIcon = <LockIconGraphic />;
+	}
+
+	return cardFieldIcon;
+}
+
+const BrandLogo = styled.span`
+	display: block;
+	position: absolute;
+	top: 15px;
+	right: 10px;
+`;
 
 function CVV( { className } ) {
 	const localize = useLocalize();
@@ -79,35 +284,24 @@ function CVV( { className } ) {
 	);
 }
 
-const CreditCardFieldsWrapper = styled.div`
-	padding: 16px;
-	position: relative;
-
-	:after {
-		display: block;
-		width: calc( 100% - 6px );
-		height: 1px;
-		content: '';
-		background: ${props => props.theme.colors.borderColorLight};
-		position: absolute;
-		top: 0;
-		left: 3px;
-	}
-`;
-
-const CreditCardField = styled( Field )`
-	margin-top: 16px;
-
-	:first-child {
-		margin-top: 0;
-	}
-`;
-const FieldRow = styled( GridRow )`
-	margin-top: 16px;
-`;
-
-const CVVImage = styled( CVV )`
-	margin-top: 21px;
-	display: block;
-	width: 100%;
-`;
+function LockIcon( { className } ) {
+	return (
+		<svg
+			className={ className }
+			xmlns="http://www.w3.org/2000/svg"
+			width="24"
+			height="24"
+			viewBox="0 0 24 24"
+			aria-hidden="true"
+		>
+			<g fill="none">
+				<path d="M0 0h24v24H0V0z" />
+				<path opacity=".87" d="M0 0h24v24H0V0z" />
+			</g>
+			<path
+				fill="#8E9196"
+				d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zM9 6c0-1.66 1.34-3 3-3s3 1.34 3 3v2H9V6zm9 14H6V10h12v10zm-6-3c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2z"
+			/>
+		</svg>
+	);
+}

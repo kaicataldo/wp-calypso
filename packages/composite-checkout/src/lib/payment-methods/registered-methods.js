@@ -9,7 +9,10 @@ import React from 'react';
 import { registerPaymentMethod } from '../../lib/payment-methods';
 import { ApplePayBillingForm, ApplePaySubmitButton, ApplePayLabel } from './apple-pay';
 import { StripeHookProvider } from '../../lib/stripe';
-import StripeCreditCardFields from '../../components/stripe-credit-card-fields';
+import {
+	StripeCreditCardFields,
+	StripePayButton,
+} from '../../components/stripe-credit-card-fields';
 
 export default function loadPaymentMethods() {
 	registerPaymentMethod( {
@@ -25,7 +28,7 @@ export default function loadPaymentMethods() {
 		LabelComponent: () => <span>Credit Card</span>,
 		PaymentMethodComponent: StripeCreditCardFields,
 		BillingContactComponent: ApplePayBillingForm,
-		SubmitButtonComponent: () => <button>Pay</button>,
+		SubmitButtonComponent: StripePayButton,
 		CheckoutWrapper: StripeHookProvider,
 	} );
 

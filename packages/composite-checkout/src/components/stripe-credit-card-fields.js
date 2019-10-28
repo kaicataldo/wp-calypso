@@ -10,12 +10,20 @@ import { CardCvcElement, CardExpiryElement, CardNumberElement } from 'react-stri
  */
 import Field from './field';
 import GridRow from './grid-row';
+import Button from './button';
 import { useLocalize } from '../lib/localize';
-import { useStripe } from '../lib/stripe';
-import { useCheckoutHandlers } from '../index';
+import { useStripe, createStripePaymentMethod, confirmStripePaymentIntent } from '../lib/stripe';
+import {
+	useCheckoutHandlers,
+	useCheckoutLineItems,
+	useCheckoutRedirects,
+	usePaymentMethodData,
+	renderDisplayValueMarkdown,
+} from '../index';
 import { VisaLogo, AmexLogo, MastercardLogo } from './payment-logos';
 
-export default function StripeCreditCardFields( { isActive, summary } ) {
+// TODO: move this file to lib/payment-methods/
+export function StripeCreditCardFields( { isActive, summary } ) {
 	const localize = useLocalize();
 	const theme = useContext( ThemeContext );
 	const { onFailure } = useCheckoutHandlers();
@@ -304,4 +312,115 @@ function LockIcon( { className } ) {
 			/>
 		</svg>
 	);
+}
+
+export function StripePayButton() {
+	const localize = useLocalize();
+	const [ , total ] = useCheckoutLineItems();
+	const [ paymentData ] = usePaymentMethodData();
+	const { onSuccess, onFailure } = useCheckoutHandlers();
+	const { successRedirectUrl, failureRedirectUrl } = useCheckoutRedirects();
+	const { stripe, stripeConfiguration } = useStripe();
+	// TODO: we need to use a placeholder for the value so the localization string can be generic
+	const buttonString = localize(
+		`Pay ${ renderDisplayValueMarkdown( total.amount.displayValue ) }`
+	);
+	return (
+		<Button
+			onClick={ () =>
+				submitStripePayment( {
+					total,
+					paymentData,
+					stripe,
+					stripeConfiguration,
+					onSuccess,
+					onFailure,
+					successUrl: successRedirectUrl,
+					cancelUrl: failureRedirectUrl,
+				} )
+			}
+			buttonState="primary"
+			buttonType="apple-pay"
+			fullWidth
+		>
+			{ buttonString }
+		</Button>
+	);
+}
+
+async function submitStripePayment( {
+	total,
+	paymentData,
+	stripe,
+	stripeConfiguration,
+	onSuccess,
+	onFailure,
+	successUrl,
+	cancelUrl,
+} ) {
+	const { name, country, postalCode, phone } = paymentData;
+	// TODO: validate fields
+	const paymentDetailsForStripe = {
+		name,
+		address: {
+			country,
+			postal_code: postalCode,
+		},
+	};
+
+	if ( phone ) {
+		paymentDetailsForStripe.phone = phone;
+	}
+
+	try {
+		const stripePaymentMethod = await createStripePaymentMethod( stripe, paymentDetailsForStripe );
+		const payment = {
+			payment_method: 'WPCOM_Billing_Stripe_Payment_Method',
+			payment_key: stripePaymentMethod.id,
+			payment_partner: stripeConfiguration.processor_id,
+			name,
+			zip: postalCode,
+			country,
+			successUrl,
+			cancelUrl,
+		};
+		// TODO: use cart manager to create cart object needed for this transaction
+		const transaction = {
+			cart,
+			domain_details: domainDetails,
+			payment,
+		};
+		const response = await wp.undocumented().transactions( transaction );
+
+		// Authentication via modal screen
+		if ( response && response.message && response.message.payment_intent_client_secret ) {
+			await stripeModalAuth( stripeConfiguration, response );
+		}
+		if ( response && response.redirect_url ) {
+			// TODO: notify user we are going to redirect
+		}
+	} catch ( error ) {
+		if ( error instanceof StripeValidationError ) {
+			onFailure( new ValidationError( 'invalid-card-details', error.messagesByField ) );
+			return;
+		}
+		onFailure( error );
+	}
+	onSuccess();
+}
+
+async function stripeModalAuth( stripeConfiguration, response ) {
+	const authenticationResponse = await confirmStripePaymentIntent(
+		stripeConfiguration,
+		response.message.payment_intent_client_secret
+	);
+
+	if ( authenticationResponse ) {
+		// TODO: what do we do with this?
+		_pushStep( {
+			name: RECEIVED_AUTHORIZATION_RESPONSE,
+			data: { status: authenticationResponse.status, orderId: response.order_id },
+			last: true,
+		} );
+	}
 }

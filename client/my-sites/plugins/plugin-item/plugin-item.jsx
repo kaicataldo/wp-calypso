@@ -1,23 +1,23 @@
 /**
  * External dependencies
  */
-
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import classNames from 'classnames';
 import { flowRight as compose, isEqual, uniqBy } from 'lodash';
-import { localize, moment } from 'i18n-calypso';
+import { localize } from 'i18n-calypso';
 
 /**
  * Internal dependencies
  */
-import CompactCard from 'components/card/compact';
 import PluginIcon from 'my-sites/plugins/plugin-icon/plugin-icon';
 import PluginActivateToggle from 'my-sites/plugins/plugin-activate-toggle';
 import PluginAutoupdateToggle from 'my-sites/plugins/plugin-autoupdate-toggle';
 import Count from 'components/count';
 import Notice from 'components/notice';
+import CompactCard from 'components/card/compact';
+import { withLocalizedMoment } from 'components/localized-moment';
 import PluginNotices from 'lib/plugins/notices';
 import { errorNotice } from 'state/notices/actions';
 
@@ -100,7 +100,7 @@ class PluginItem extends Component {
 	}
 
 	ago( date ) {
-		return moment.utc( date, 'YYYY-MM-DD hh:mma' ).fromNow();
+		return this.props.moment.utc( date, 'YYYY-MM-DD hh:mma' ).fromNow();
 	}
 
 	doing() {
@@ -383,5 +383,6 @@ export default compose(
 		null,
 		{ errorNotice }
 	),
-	localize
+	localize,
+	withLocalizedMoment
 )( PluginItem );

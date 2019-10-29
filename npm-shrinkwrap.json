@@ -43,7 +43,7 @@
 				"enzyme-to-json": "3.4.3",
 				"file-loader": "3.0.1",
 				"jest-config": "24.9.0",
-				"jest-enzyme": "7.1.1",
+				"jest-enzyme": "7.1.2",
 				"mini-css-extract-plugin-with-rtl": "github:Automattic/mini-css-extract-plugin-with-rtl#v0.7.0-with-rtl",
 				"node-sass": "4.13.0",
 				"postcss-custom-properties": "8.0.11",
@@ -76,6 +76,16 @@
 						"semver": "^5.7.0"
 					}
 				},
+				"enzyme-matchers": {
+					"version": "7.1.2",
+					"resolved": "https://registry.npmjs.org/enzyme-matchers/-/enzyme-matchers-7.1.2.tgz",
+					"integrity": "sha512-03WqAg2XDl7id9rARIO97HQ1JIw9F2heJ3R4meGu/13hx0ULTDEgl0E67MGl2Uq1jq1DyRnJfto1/VSzskdV5A==",
+					"dev": true,
+					"requires": {
+						"circular-json-es6": "^2.0.1",
+						"deep-equal-ident": "^1.1.1"
+					}
+				},
 				"enzyme-to-json": {
 					"version": "3.4.3",
 					"resolved": "https://registry.npmjs.org/enzyme-to-json/-/enzyme-to-json-3.4.3.tgz",
@@ -83,6 +93,26 @@
 					"dev": true,
 					"requires": {
 						"lodash": "^4.17.15"
+					}
+				},
+				"jest-environment-enzyme": {
+					"version": "7.1.2",
+					"resolved": "https://registry.npmjs.org/jest-environment-enzyme/-/jest-environment-enzyme-7.1.2.tgz",
+					"integrity": "sha512-3tfaYAzO7qZSRrv+srQnfK16Vu5XwH/pHi8FpoqSHjKKngbHzXf7aBCBuWh8y3w0OtknHRfDMFrC60Khj+g1hA==",
+					"dev": true,
+					"requires": {
+						"jest-environment-jsdom": "^24.0.0"
+					}
+				},
+				"jest-enzyme": {
+					"version": "7.1.2",
+					"resolved": "https://registry.npmjs.org/jest-enzyme/-/jest-enzyme-7.1.2.tgz",
+					"integrity": "sha512-j+jkph3t5hGBS12eOldpfsnERYRCHi4c/0KWPMnqRPoJJXvCpLIc5th1MHl0xDznQDXVU0AHUXg3rqMrf8vGpA==",
+					"dev": true,
+					"requires": {
+						"enzyme-matchers": "^7.1.2",
+						"enzyme-to-json": "^3.3.0",
+						"jest-environment-enzyme": "^7.1.2"
 					}
 				}
 			}
@@ -8947,16 +8977,6 @@
 				"semver": "^5.7.0"
 			}
 		},
-		"enzyme-matchers": {
-			"version": "7.1.1",
-			"resolved": "https://registry.npmjs.org/enzyme-matchers/-/enzyme-matchers-7.1.1.tgz",
-			"integrity": "sha512-fw/FxwpEg6n1KYpEHnhA44iFduYHDUVVePXSMmf883q/JDMXb+sIU55maSw2oFWqt9zd7rcGqmSV8sHQO5pReg==",
-			"dev": true,
-			"requires": {
-				"circular-json-es6": "^2.0.1",
-				"deep-equal-ident": "^1.1.1"
-			}
-		},
 		"enzyme-shallow-equal": {
 			"version": "1.0.0",
 			"resolved": "https://registry.npmjs.org/enzyme-shallow-equal/-/enzyme-shallow-equal-1.0.0.tgz",
@@ -12945,15 +12965,6 @@
 				"pretty-format": "^24.9.0"
 			}
 		},
-		"jest-environment-enzyme": {
-			"version": "7.1.1",
-			"resolved": "https://registry.npmjs.org/jest-environment-enzyme/-/jest-environment-enzyme-7.1.1.tgz",
-			"integrity": "sha512-k+QJkK0iRtjWbNfKdtj1QQIs12JbbvPmHW30cSbDoIgOFO7Bd1lLo6qOabM+PdhPCeLWQ1D1ZoTrHPauXdYpzA==",
-			"dev": true,
-			"requires": {
-				"jest-environment-jsdom": "^24.0.0"
-			}
-		},
 		"jest-environment-jsdom": {
 			"version": "24.9.0",
 			"resolved": "https://registry.npmjs.org/jest-environment-jsdom/-/jest-environment-jsdom-24.9.0.tgz",
@@ -12979,17 +12990,6 @@
 				"@jest/types": "^24.9.0",
 				"jest-mock": "^24.9.0",
 				"jest-util": "^24.9.0"
-			}
-		},
-		"jest-enzyme": {
-			"version": "7.1.1",
-			"resolved": "https://registry.npmjs.org/jest-enzyme/-/jest-enzyme-7.1.1.tgz",
-			"integrity": "sha512-ujMi/2OF16rsjsS2ozdZCukfRZGC/Sb3MoJjINXITTvZM6lTL14lDliJr1kYIlUZVrphw0fmZkTNVTP7DnJ+Xw==",
-			"dev": true,
-			"requires": {
-				"enzyme-matchers": "^7.1.1",
-				"enzyme-to-json": "^3.3.0",
-				"jest-environment-enzyme": "^7.1.1"
 			}
 		},
 		"jest-fetch-mock": {

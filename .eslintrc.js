@@ -1,6 +1,4 @@
 /** @format */
-const { merge } = require( 'lodash' );
-const reactVersion = require( './package.json' ).dependencies.react;
 
 module.exports = {
 	root: true,
@@ -11,67 +9,7 @@ module.exports = {
 		'prettier',
 		'prettier/react',
 	],
-	overrides: [
-		{
-			files: [ 'bin/**/*' ],
-			rules: {
-				'import/no-nodejs-modules': 0,
-				'no-console': 0,
-				'no-process-exit': 0,
-				'valid-jsdoc': 0,
-			},
-		},
-		{
-			files: [ 'test/e2e/**/*' ],
-			rules: {
-				'import/no-nodejs-modules': 0,
-				'import/no-extraneous-dependencies': 0,
-				'no-console': 0,
-				'jest/valid-describe': 0,
-				'jest/no-test-prefixes': 0,
-				'jest/no-identical-title': 0,
-			},
-			globals: {
-				step: false,
-			},
-		},
-		merge(
-			// ESLint doesn't allow the `extends` field inside `overrides`, so we need to compose
-			// the TypeScript config manually using internal bits from various plugins
-			{},
-			// base TypeScript config: parser options, add plugin with rules
-			require( '@typescript-eslint/eslint-plugin' ).configs.base,
-			// basic recommended rules config from the TypeScript plugin
-			{ rules: require( '@typescript-eslint/eslint-plugin' ).configs.recommended.rules },
-			// Prettier rules config
-			require( 'eslint-config-prettier/@typescript-eslint' ),
-			// Our own overrides
-			{
-				files: [ '**/*.ts', '**/*.tsx' ],
-				rules: {
-					'@typescript-eslint/explicit-function-return-type': 'off',
-					'@typescript-eslint/explicit-member-accessibility': 'off',
-					'@typescript-eslint/no-unused-vars': [ 'error', { ignoreRestSiblings: true } ],
-					'@typescript-eslint/no-use-before-define': [
-						'error',
-						{ functions: false, typedefs: false },
-					],
-					'no-use-before-define': 'off',
-					'@typescript-eslint/no-var-requires': 'off',
-					// REST API objects include underscores
-					'@typescript-eslint/camelcase': 'off',
-					'valid-jsdoc': [
-						2,
-						{
-							requireParamType: false,
-							requireReturn: false,
-							requireReturnType: false,
-						},
-					],
-				},
-			}
-		),
-	],
+	plugins: [ 'jest', 'jsx-a11y', 'import' ],
 	env: {
 		browser: true,
 		jest: true,
@@ -87,27 +25,26 @@ module.exports = {
 		// this is when Webpack last built the bundle
 		BUILD_TIMESTAMP: true,
 	},
-	plugins: [ 'jest', 'jsx-a11y', 'import' ],
 	settings: {
 		react: {
-			version: reactVersion,
+			version: 'detect',
 		},
 	},
 	rules: {
 		// REST API objects include underscores
-		camelcase: 0,
+		camelcase: 'off',
 
 		// TODO: why did we turn this off?
-		'jest/valid-expect': 0,
+		'jest/valid-expect': 'off',
 
 		// Deprecated rule, fails in some valid cases with custom input components
-		'jsx-a11y/label-has-for': 0,
+		'jsx-a11y/label-has-for': 'off',
 
 		// i18n-calypso translate triggers false failures
-		'jsx-a11y/anchor-has-content': 0,
+		'jsx-a11y/anchor-has-content': 'off',
 
 		'no-restricted-imports': [
-			2,
+			'error',
 			{
 				paths: [
 					// Error if any module depends on the data-observe mixin, which is deprecated.
@@ -140,7 +77,7 @@ module.exports = {
 			},
 		],
 		'no-restricted-modules': [
-			2,
+			'error',
 			{
 				paths: [
 					// Error if any module depends on the data-observe mixin, which is deprecated.
@@ -160,11 +97,11 @@ module.exports = {
 		],
 
 		// Allows Chai `expect` expressions. Now that we're on jest, hopefully we can remove this one.
-		'no-unused-expressions': 0,
+		'no-unused-expressions': 'off',
 
 		// enforce our classname namespacing rules
 		'wpcalypso/jsx-classname-namespace': [
-			2,
+			'error',
 			{
 				rootFiles: [ 'index.js', 'index.jsx', 'main.js', 'main.jsx' ],
 			},
@@ -180,4 +117,54 @@ module.exports = {
 		// This prevents us from depending on transitive dependencies, which could break in unexpected ways.
 		'import/no-extraneous-dependencies': [ 'error', { packageDir: './' } ],
 	},
+	overrides: [
+		{
+			files: [ 'bin/**/*' ],
+			rules: {
+				'import/no-nodejs-modules': 'off',
+				'no-console': 'off',
+				'no-process-exit': 'off',
+				'valid-jsdoc': 'off',
+			},
+		},
+		{
+			files: [ 'test/e"error"e/**/*' ],
+			rules: {
+				'import/no-nodejs-modules': 'off',
+				'import/no-extraneous-dependencies': 'off',
+				'no-console': 'off',
+				'jest/valid-describe': 'off',
+				'jest/no-test-prefixes': 'off',
+				'jest/no-identical-title': 'off',
+			},
+			globals: {
+				step: false,
+			},
+		},
+		{
+			files: [ '**/*.ts', '**/*.tsx' ],
+			extends: [ 'plugin:@typescript-eslint/recommended', 'prettier/@typescript-eslint' ],
+			rules: {
+				'@typescript-eslint/explicit-function-return-type': 'off',
+				'@typescript-eslint/explicit-member-accessibility': 'off',
+				'@typescript-eslint/no-unused-vars': [ 'error', { ignoreRestSiblings: true } ],
+				'@typescript-eslint/no-use-before-define': [
+					'error',
+					{ functions: false, typedefs: false },
+				],
+				'no-use-before-define': 'off',
+				'@typescript-eslint/no-var-requires': 'off',
+				// REST API objects include underscores
+				'@typescript-eslint/camelcase': 'off',
+				'valid-jsdoc': [
+					'error',
+					{
+						requireParamType: false,
+						requireReturn: false,
+						requireReturnType: false,
+					},
+				],
+			},
+		},
+	],
 };
